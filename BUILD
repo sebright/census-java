@@ -15,6 +15,10 @@
 java_library(
     name = "census-core",
     srcs = glob(["core/java/com/google/census/*.java"]),
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         "@guava//jar",
         "@jsr305//jar",
@@ -24,6 +28,10 @@ java_library(
 java_library(
     name = "census-core_native",
     srcs = glob(["core_native/java/com/google/census/*.java"]),
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         ":census-core",
         "@guava//jar",
@@ -34,6 +42,10 @@ java_library(
 java_binary(
     name = "CensusRunner",
     srcs = ["examples/java/com/google/census/CensusRunner.java"],
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     main_class = "com.google.census.examples.CensusRunner",
     deps = [
         ":census-core",
@@ -46,6 +58,10 @@ java_binary(
 java_test(
     name = "CensusContextTest",
     srcs = ["core/javatests/com/google/census/CensusContextTest.java"],
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         ":census-core",
         ":census-core_native",
@@ -59,6 +75,10 @@ java_test(
 java_test(
     name = "CensusContextFactoryTest",
     srcs = ["core/javatests/com/google/census/CensusContextFactoryTest.java"],
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         ":census-core",
         ":census-core_native",
@@ -72,6 +92,10 @@ java_test(
 java_test(
     name = "CensusScopeTest",
     srcs = ["core/javatests/com/google/census/CensusScopeTest.java"],
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         ":census-core",
         ":census-core_native",
@@ -85,6 +109,10 @@ java_test(
 java_test(
     name = "MetricMapTest",
     srcs = ["core/javatests/com/google/census/MetricMapTest.java"],
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         ":census-core",
         ":census-core_native",
@@ -98,6 +126,10 @@ java_test(
 java_test(
     name = "ProviderTest",
     srcs = ["core/javatests/com/google/census/ProviderTest.java"],
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         ":census-core",
         ":census-core_native",
@@ -111,6 +143,10 @@ java_test(
 java_test(
     name = "RpcConstantsTest",
     srcs = ["core/javatests/com/google/census/RpcConstantsTest.java"],
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         ":census-core",
         ":census-core_native",
@@ -124,6 +160,10 @@ java_test(
 java_test(
     name = "TagKeyTest",
     srcs = ["core/javatests/com/google/census/TagKeyTest.java"],
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         ":census-core",
         ":census-core_native",
@@ -137,6 +177,10 @@ java_test(
 java_test(
     name = "TagTest",
     srcs = ["core/javatests/com/google/census/TagTest.java"],
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         ":census-core",
         ":census-core_native",
@@ -150,6 +194,10 @@ java_test(
 java_test(
     name = "TagValueTest",
     srcs = ["core/javatests/com/google/census/TagValueTest.java"],
+    javacopts = [
+        "-source 1.6",
+        "-target 1.6",
+    ],
     deps = [
         ":census-core",
         ":census-core_native",

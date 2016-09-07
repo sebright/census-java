@@ -43,7 +43,7 @@ final class CensusSerializer {
   @Nullable
   static CensusContextImpl deserialize(ByteBuffer buffer) {
     String input = new String(buffer.array(), UTF_8);
-    HashMap<String, String> tags = new HashMap<>();
+    HashMap<String, String> tags = new HashMap<String, String>();
     if (!input.matches("(\2[^\2\3]*\3[^\2\3]*)*")) {
       return null;
     }
