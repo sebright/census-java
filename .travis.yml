@@ -18,9 +18,16 @@ before_install:
   - curl https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg | sudo apt-key add -
   - sudo apt-get update
 
-# install:
-#   - sudo apt-get install bazel
+install:
+  - case "$BUIILD" in
+      "BAZEL")
+        sudo apt-get install bazel;;
+    esac
 
 script:
-  # - bazel test ...
-  - mvn package
+  - case "$BUIILD" in
+      "BAZEL")
+        bazel test ...;;
+      "MVN")
+        mvn package;;
+    esac
