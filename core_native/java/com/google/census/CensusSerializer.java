@@ -37,7 +37,7 @@ final class CensusSerializer {
     try {
       return ByteBuffer.wrap(builder.toString().getBytes("UTF-8"));
     } catch (UnsupportedEncodingException e) {
-      throw new AssertionError();
+      throw new AssertionError("UTF-8 not supported.");
     }
   }
 
@@ -48,7 +48,7 @@ final class CensusSerializer {
     try {
       input = new String(buffer.array(), "UTF-8");
     } catch (UnsupportedEncodingException e) {
-      throw new AssertionError();
+      throw new AssertionError("UTF-8 not supported.");
     }
     HashMap<String, String> tags = new HashMap<String, String>();
     if (!input.matches("(\2[^\2\3]*\3[^\2\3]*)*")) {
