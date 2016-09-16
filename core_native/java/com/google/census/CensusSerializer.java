@@ -13,12 +13,10 @@
 
 package com.google.census;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
 import javax.annotation.Nullable;
 
 /** Native implementation {@link CensusContext} serialization. */
@@ -36,13 +34,22 @@ final class CensusSerializer {
           .append(TAG_DELIM)
           .append(tag.getValue());
     }
-    return ByteBuffer.wrap(builder.toString().getBytes(UTF_8));
+    try {
+      return ByteBuffer.wrap(builder.toString().getBytes("UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      throw new AssertionError();
+    }
   }
 
   // The serialized tags are of the form: (<tag prefix> + 'key' + <tag delim> + 'value')*
   @Nullable
   static CensusContextImpl deserialize(ByteBuffer buffer) {
-    String input = new String(buffer.array(), UTF_8);
+    String input;
+    try {
+      input = new String(buffer.array(), "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new AssertionError();
+    }
     HashMap<String, String> tags = new HashMap<String, String>();
     if (!input.matches("(\2[^\2\3]*\3[^\2\3]*)*")) {
       return null;
