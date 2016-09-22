@@ -14,7 +14,7 @@ install:
   - protoc --version || echo "no protoc"
   - sudo apt-get install bazel
   - protoc --version || echo "no protoc"
-  - sudo apt-get install protoc
+  - sudo apt-get install protobuf-compiler
   - protoc --version || echo "no protoc"
 
 script:
