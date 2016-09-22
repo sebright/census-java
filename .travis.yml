@@ -14,7 +14,10 @@ install:
   - protoc --version || echo "no protoc"
   - sudo apt-get install bazel
   - protoc --version || echo "no protoc"
-  - sudo apt-get install protobuf-compiler
+  - curl -o protoc.zip https://github.com/google/protobuf/releases/download/v3.0.2/protoc-3.0.2-linux-x86_64.zip
+  - unzip protoc.zip
+  - export PATH=`pwd`/bin/:$PATH
+  # - sudo apt-get install protobuf-compiler
   - protoc --version || echo "no protoc"
 
 script:
