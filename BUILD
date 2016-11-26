@@ -75,6 +75,20 @@ java_binary(
 )
 
 java_test(
+    name = "AggregationTest",
+    srcs = ["core/javatests/com/google/instrumentation/stats/AggregationTest.java"],
+    deps = [
+        ":common-core",
+        ":stats-core",
+        "@guava//jar",
+        "@guava_testlib//jar",
+        "@jsr305//jar",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)
+
+java_test(
     name = "AggregationDescriptorTest",
     srcs = ["core/javatests/com/google/instrumentation/stats/AggregationDescriptorTest.java"],
     deps = [
@@ -201,7 +215,19 @@ java_test(
     srcs = ["core/javatests/com/google/instrumentation/stats/TagKeyTest.java"],
     deps = [
         ":stats-core",
-        ":stats-core_native",
+        "@guava//jar",
+        "@guava_testlib//jar",
+        "@jsr305//jar",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)
+
+java_test(
+    name = "TagTest",
+    srcs = ["core/javatests/com/google/instrumentation/stats/TagTest.java"],
+    deps = [
+        ":stats-core",
         "@guava//jar",
         "@guava_testlib//jar",
         "@jsr305//jar",
@@ -215,7 +241,6 @@ java_test(
     srcs = ["core/javatests/com/google/instrumentation/stats/TagValueTest.java"],
     deps = [
         ":stats-core",
-        ":stats-core_native",
         "@guava//jar",
         "@guava_testlib//jar",
         "@jsr305//jar",
@@ -253,6 +278,20 @@ java_test(
 java_test(
     name = "ViewDescriptorTest",
     srcs = ["core/javatests/com/google/instrumentation/stats/ViewDescriptorTest.java"],
+    deps = [
+        ":common-core",
+        ":stats-core",
+        "@guava//jar",
+        "@guava_testlib//jar",
+        "@jsr305//jar",
+        "@junit//jar",
+        "@truth//jar",
+    ],
+)
+
+java_test(
+    name = "ViewTest",
+    srcs = ["core/javatests/com/google/instrumentation/stats/ViewTest.java"],
     deps = [
         ":common-core",
         ":stats-core",
