@@ -66,7 +66,6 @@ public class DurationTest {
     assertThat(Duration.create(-24, -43)).isNotEqualTo(Duration.create(-24, -42));
   }
 
-  @Test
   public void test() {
     Set<Short> s = new HashSet<>();
     for (short i = 0; i < 100; i++) {
