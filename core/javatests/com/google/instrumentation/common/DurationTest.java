@@ -2,6 +2,9 @@ package com.google.instrumentation.common;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.util.HashSet;
+import java.util.Set;
+import org.junit.Test;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -61,5 +64,15 @@ public class DurationTest {
     assertThat(Duration.create(24, 43)).isNotEqualTo(Duration.create(24, 42));
     assertThat(Duration.create(-25, -42)).isNotEqualTo(Duration.create(-24, -42));
     assertThat(Duration.create(-24, -43)).isNotEqualTo(Duration.create(-24, -42));
+  }
+
+  @Test
+  public void test() {
+    Set<Short> s = new HashSet<>();
+    for (short i = 0; i < 100; i++) {
+      s.add(i);
+      s.remove(i - 1);
+    }
+    System.out.println(s.size());
   }
 }
