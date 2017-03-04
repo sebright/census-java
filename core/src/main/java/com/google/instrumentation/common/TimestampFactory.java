@@ -46,6 +46,7 @@ public final class TimestampFactory {
 
   @Immutable
   static final class DefaultHandler implements Handler {
+    @Override
     public Timestamp timeNow() {
       return Timestamp.fromMillis(System.currentTimeMillis());
     }
