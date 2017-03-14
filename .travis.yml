@@ -16,6 +16,9 @@ matrix:
   - jdk: oraclejdk8
     env: BUILD=MVN GUAVA_VERSION=19.0
 
+  - jdk: openjdk7
+    env: BUILD=MVN GUAVA_VERSION=20.0
+
   - jdk: oraclejdk8
     env: BUILD=MVN GUAVA_VERSION=20.0
 
