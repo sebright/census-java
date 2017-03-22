@@ -1,31 +1,41 @@
 sudo: required
 dist: trusty
-language: java
 
 matrix:
   include:
-  - jdk: openjdk6
+  - language: java
+    jdk: openjdk6
     env: BUILD=MVN GUAVA_VERSION=19.0
 
-  - jdk: oraclejdk7
+  - language: java
+    jdk: oraclejdk7
     env: BUILD=MVN GUAVA_VERSION=19.0
 
-  - jdk: oraclejdk7
+  - language: java
+    jdk: oraclejdk7
     env: BUILD=MVN GUAVA_VERSION=20.0
 
-  - jdk: oraclejdk8
+  - language: java
+    jdk: oraclejdk8
     env: BUILD=MVN GUAVA_VERSION=19.0
 
-  - jdk: oraclejdk8
+  - language: java
+    jdk: oraclejdk8
     env: BUILD=MVN GUAVA_VERSION=20.0
 
-  - jdk: oraclejdk8
+  - language: java
+    jdk: oraclejdk8
     env: BUILD=MVN GUAVA_VERSION=21.0
 
-  - jdk: oraclejdk8
+  - language: java
+    jdk: oraclejdk8
     env: BUILD=BAZEL
 
-  - jdk: oraclejdk8
+  - language: java
+    jdk: oraclejdk8
+    env: BUILD=GRADLE
+
+  - language: android
     env: BUILD=GRADLE
 
 before_install:
