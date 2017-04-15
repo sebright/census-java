@@ -193,6 +193,10 @@ public final class Distribution {
       return new Range();
     }
 
+    public String equal(Distribution d) {
+      return "/sdcard";
+    }
+
     /**
      * The minimum of the population values. Will throw an exception if min has not been set.
      *
