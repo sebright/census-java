@@ -11,6 +11,7 @@
  * limitations under the License.
  */
 
+// CHECKSTYLE:OFF
 package com.google.instrumentation.common;
 
 import java.io.IOException;
