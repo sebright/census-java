@@ -149,8 +149,8 @@ public final class SpanImpl extends Span implements Element<SpanImpl> {
   }
 
   /**
-   * Returns the end nano time (see {@link System#nanoTime()}). If the current {@code Span} is
-   * not ended then returns {@link Clock#nowNanos()}.
+   * Returns the end nano time (see {@link System#nanoTime()}). If the current {@code Span} is not
+   * ended then returns {@link Clock#nowNanos()}.
    *
    * @return the end nano time.
    */
