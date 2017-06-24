@@ -26,6 +26,7 @@ import io.opencensus.trace.base.TraceOptions;
 import io.opencensus.trace.config.TraceConfig;
 import io.opencensus.trace.config.TraceParams;
 import io.opencensus.trace.internal.RandomHandler;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
@@ -34,6 +35,14 @@ import javax.annotation.Nullable;
 /** Implementation of the {@link SpanBuilder}. */
 final class SpanBuilderImpl extends SpanBuilder {
   private final Options options;
+
+  private final String name;
+  private Span parentSpan;
+  private SpanContext remoteParentSpanContext;
+  private Sampler sampler;
+  private List<Span> parentLinks;
+  private Boolean recordEvents;
+
 
   Span startSpanInternal(
       @Nullable SpanContext parent,
@@ -112,7 +121,9 @@ final class SpanBuilderImpl extends SpanBuilder {
       @Nullable SpanContext remoteParentSpanContext,
       String name,
       Options options) {
-    super(parentSpan, remoteParentSpanContext, name);
+    this.name = checkNotNull(name, "name");
+    this.parentSpan = parentSpan;
+    this.remoteParentSpanContext = remoteParentSpanContext;
     this.options = options;
   }
 
@@ -160,5 +171,47 @@ final class SpanBuilderImpl extends SpanBuilder {
       this.clock = checkNotNull(clock, "clock");
       this.traceConfig = checkNotNull(traceConfig, "traceConfig");
     }
+  }
+
+  @Override
+  public SpanBuilder setSampler(@Nullable Sampler sampler) {
+    this.sampler = sampler;
+    return this;
+  }
+
+  @Override
+  public SpanBuilder setParentLinks(List<Span> parentLinks) {
+    this.parentLinks = checkNotNull(parentLinks, parentLinks);
+    return this;
+  }
+
+  @Override
+  public SpanBuilder setRecordEvents(boolean recordEvents) {
+    this.recordEvents = recordEvents;
+    return this;
+  }
+
+  private String getName() {
+    return name;
+  }
+
+  private Span getParentSpan() {
+    return parentSpan;
+  }
+
+  private SpanContext getRemoteParentSpanContext() {
+    return remoteParentSpanContext;
+  }
+
+  private Sampler getSampler() {
+    return sampler;
+  }
+
+  private Boolean getRecordEvents() {
+    return recordEvents;
+  }
+
+  private List<Span> getParentLinks() {
+    return parentLinks != null ? parentLinks : Collections.<Span>emptyList();
   }
 }
