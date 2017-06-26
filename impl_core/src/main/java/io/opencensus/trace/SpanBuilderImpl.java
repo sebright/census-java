@@ -37,10 +37,10 @@ final class SpanBuilderImpl extends SpanBuilder {
   private final Options options;
 
   private final String name;
-  private Span parentSpan;
-  private SpanContext remoteParentSpanContext;
+  private final Span parentSpan;
+  private final SpanContext remoteParentSpanContext;
   private Sampler sampler;
-  private List<Span> parentLinks;
+  private List<Span> parentLinks = Collections.<Span>emptyList();
   private Boolean recordEvents;
 
 
@@ -129,13 +129,13 @@ final class SpanBuilderImpl extends SpanBuilder {
 
   @Override
   public Span startSpan() {
-    SpanContext parentContext = getRemoteParentSpanContext();
+    SpanContext parentContext = remoteParentSpanContext;
     boolean hasRemoteParent = parentContext != null;
     TimestampConverter timestampConverter = null;
     if (!hasRemoteParent) {
       // This is not a child of a remote Span. Get the parent SpanContext from the parent Span if
       // any.
-      Span parent = getParentSpan();
+      Span parent = parentSpan;
       if (parent != null) {
         parentContext = parent.getContext();
         // Pass the timestamp converter from the parent to ensure that the recorded events are in
@@ -148,10 +148,10 @@ final class SpanBuilderImpl extends SpanBuilder {
     return startSpanInternal(
         parentContext,
         hasRemoteParent,
-        getName(),
-        getSampler(),
-        getParentLinks(),
-        getRecordEvents(),
+        name,
+        sampler,
+        parentLinks,
+        recordEvents,
         timestampConverter);
   }
 
@@ -181,7 +181,7 @@ final class SpanBuilderImpl extends SpanBuilder {
 
   @Override
   public SpanBuilder setParentLinks(List<Span> parentLinks) {
-    this.parentLinks = checkNotNull(parentLinks, parentLinks);
+    this.parentLinks = checkNotNull(parentLinks, "parentLinks");
     return this;
   }
 
@@ -189,29 +189,5 @@ final class SpanBuilderImpl extends SpanBuilder {
   public SpanBuilder setRecordEvents(boolean recordEvents) {
     this.recordEvents = recordEvents;
     return this;
-  }
-
-  private String getName() {
-    return name;
-  }
-
-  private Span getParentSpan() {
-    return parentSpan;
-  }
-
-  private SpanContext getRemoteParentSpanContext() {
-    return remoteParentSpanContext;
-  }
-
-  private Sampler getSampler() {
-    return sampler;
-  }
-
-  private Boolean getRecordEvents() {
-    return recordEvents;
-  }
-
-  private List<Span> getParentLinks() {
-    return parentLinks != null ? parentLinks : Collections.<Span>emptyList();
   }
 }
