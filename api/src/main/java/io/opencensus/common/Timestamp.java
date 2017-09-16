@@ -26,6 +26,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.math.LongMath;
 import com.google.common.primitives.Longs;
 import java.math.RoundingMode;
+import java.util.function.Function;
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -39,6 +40,7 @@ import javax.annotation.concurrent.Immutable;
 @AutoValue
 public abstract class Timestamp implements Comparable<Timestamp> {
   private static final Timestamp EPOCH = new AutoValue_Timestamp(0, 0);
+  public static final Function<Integer, Long> FUNCTION = null;
 
   Timestamp() {}
 
