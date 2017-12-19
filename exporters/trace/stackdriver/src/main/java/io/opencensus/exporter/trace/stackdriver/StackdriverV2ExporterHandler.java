@@ -58,6 +58,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/*>>>
+import org.checkerframework.checker.nullness.qual.Nullable;
+*/
+
 /** Exporter to Stackdriver Trace API v2. */
 final class StackdriverV2ExporterHandler extends SpanExporter.Handler {
   private static final Tracer tracer = Tracing.getTracer();
@@ -114,9 +118,15 @@ final class StackdriverV2ExporterHandler extends SpanExporter.Handler {
             .setStartTime(toTimestampProto(spanData.getStartTimestamp()))
             .setAttributes(toAttributesProto(spanData.getAttributes()))
             .setTimeEvents(
-                toTimeEventsProto(spanData.getAnnotations(), spanData.getNetworkEvents()))
-            .setStatus(toStatusProto(spanData.getStatus()))
-            .setEndTime(toTimestampProto(spanData.getEndTimestamp()));
+                toTimeEventsProto(spanData.getAnnotations(), spanData.getNetworkEvents()));
+    io.opencensus.trace.Status status = spanData.getStatus();
+    if (status != null) {
+      spanBuilder.setStatus(toStatusProto(status));
+    }
+    Timestamp end = spanData.getEndTimestamp();
+    if (end != null) {
+      spanBuilder.setEndTime(toTimestampProto(end));
+    }
 
     if (spanData.getParentSpanId() != null && spanData.getParentSpanId().isValid()) {
       spanBuilder.setParentSpanId(encodeSpanId(spanData.getParentSpanId()));
@@ -246,7 +256,7 @@ final class StackdriverV2ExporterHandler extends SpanExporter.Handler {
             return null;
           }
         },
-        Functions.<Void>returnNull());
+        Functions.</*@Nullable*/ Void>returnNull());
     return attributeValueBuilder.build();
   }
 

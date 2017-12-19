@@ -24,6 +24,7 @@ import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import io.opencensus.implcore.internal.DaemonThreadFactory;
 import io.opencensus.implcore.internal.EventQueue;
+import io.opencensus.implcore.internal.NullnessUtils;
 import java.util.concurrent.Executors;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -174,7 +175,7 @@ public final class DisruptorEventQueue implements EventQueue {
   private static final class DisruptorEventHandler implements EventHandler<DisruptorEvent> {
     @Override
     public void onEvent(DisruptorEvent event, long sequence, boolean endOfBatch) {
-      event.getEntry().process();
+      NullnessUtils.assertNotNull(event.getEntry()).process();
     }
   }
 }

@@ -37,6 +37,9 @@ import javax.annotation.concurrent.Immutable;
  */
 @AutoValue
 @Immutable
+// Suppress Checker Framework warning about missing @Nullable in generated equals method.
+@AutoValue.CopyAnnotations
+@SuppressWarnings("nullness")
 abstract class ProbabilitySampler extends Sampler {
 
   ProbabilitySampler() {}
@@ -83,10 +86,12 @@ abstract class ProbabilitySampler extends Sampler {
     if (parentContext != null && parentContext.getTraceOptions().isSampled()) {
       return true;
     }
-    // If any parent link is sampled keep the sampling decision.
-    for (Span parentLink : parentLinks) {
-      if (parentLink.getContext().getTraceOptions().isSampled()) {
-        return true;
+    if (parentLinks != null) {
+      // If any parent link is sampled keep the sampling decision.
+      for (Span parentLink : parentLinks) {
+        if (parentLink.getContext().getTraceOptions().isSampled()) {
+          return true;
+        }
       }
     }
     // Always sample if we are within probability range. This is true even for child spans (that

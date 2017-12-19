@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.Lists;
 import io.opencensus.common.Function;
+import io.opencensus.internal.NullnessUtils;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.concurrent.Immutable;
@@ -60,6 +61,9 @@ public abstract class AggregationData {
   /** The sum value of aggregated {@code MeasureValueDouble}s. */
   @Immutable
   @AutoValue
+  // Suppress Checker Framework warning about missing @Nullable in generated equals method.
+  @AutoValue.CopyAnnotations
+  @SuppressWarnings("nullness")
   public abstract static class SumDataDouble extends AggregationData {
 
     SumDataDouble() {}
@@ -89,13 +93,16 @@ public abstract class AggregationData {
         Function<? super MeanData, T> p3,
         Function<? super DistributionData, T> p4,
         Function<? super AggregationData, T> defaultFunction) {
-      return p0.apply(this);
+      return NullnessUtils.<SumDataDouble, T>removeSuper(p0).apply(this);
     }
   }
 
   /** The sum value of aggregated {@code MeasureValueLong}s. */
   @Immutable
   @AutoValue
+  // Suppress Checker Framework warning about missing @Nullable in generated equals method.
+  @AutoValue.CopyAnnotations
+  @SuppressWarnings("nullness")
   public abstract static class SumDataLong extends AggregationData {
 
     SumDataLong() {}
@@ -125,13 +132,16 @@ public abstract class AggregationData {
         Function<? super MeanData, T> p3,
         Function<? super DistributionData, T> p4,
         Function<? super AggregationData, T> defaultFunction) {
-      return p1.apply(this);
+      return NullnessUtils.<SumDataLong, T>removeSuper(p1).apply(this);
     }
   }
 
   /** The count value of aggregated {@code MeasureValue}s. */
   @Immutable
   @AutoValue
+  // Suppress Checker Framework warning about missing @Nullable in generated equals method.
+  @AutoValue.CopyAnnotations
+  @SuppressWarnings("nullness")
   public abstract static class CountData extends AggregationData {
 
     CountData() {}
@@ -161,13 +171,16 @@ public abstract class AggregationData {
         Function<? super MeanData, T> p3,
         Function<? super DistributionData, T> p4,
         Function<? super AggregationData, T> defaultFunction) {
-      return p2.apply(this);
+      return NullnessUtils.<CountData, T>removeSuper(p2).apply(this);
     }
   }
 
   /** The mean value of aggregated {@code MeasureValue}s. */
   @Immutable
   @AutoValue
+  // Suppress Checker Framework warning about missing @Nullable in generated equals method.
+  @AutoValue.CopyAnnotations
+  @SuppressWarnings("nullness")
   public abstract static class MeanData extends AggregationData {
 
     MeanData() {}
@@ -205,7 +218,7 @@ public abstract class AggregationData {
         Function<? super MeanData, T> p3,
         Function<? super DistributionData, T> p4,
         Function<? super AggregationData, T> defaultFunction) {
-      return p3.apply(this);
+      return NullnessUtils.<MeanData, T>removeSuper(p3).apply(this);
     }
   }
 
@@ -215,6 +228,9 @@ public abstract class AggregationData {
    */
   @Immutable
   @AutoValue
+  // Suppress Checker Framework warning about missing @Nullable in generated equals method.
+  @AutoValue.CopyAnnotations
+  @SuppressWarnings("nullness")
   public abstract static class DistributionData extends AggregationData {
 
     DistributionData() {}
@@ -302,7 +318,7 @@ public abstract class AggregationData {
         Function<? super MeanData, T> p3,
         Function<? super DistributionData, T> p4,
         Function<? super AggregationData, T> defaultFunction) {
-      return p4.apply(this);
+      return NullnessUtils.<DistributionData, T>removeSuper(p4).apply(this);
     }
   }
 }

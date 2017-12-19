@@ -25,6 +25,7 @@ import io.opencensus.common.Duration;
 import io.opencensus.common.Function;
 import io.opencensus.common.Functions;
 import io.opencensus.common.Timestamp;
+import io.opencensus.internal.NullnessUtils;
 import io.opencensus.trace.Annotation;
 import io.opencensus.trace.AttributeValue;
 import io.opencensus.trace.NetworkEvent;
@@ -369,8 +370,9 @@ final class TracezZPageHandler extends ZPageHandler {
           htmlEscaper()
               .escape(
                   event.getEvent() instanceof Annotation
-                      ? renderAnnotation((Annotation) event.getEvent())
-                      : renderNetworkEvents((NetworkEvent) event.getEvent())));
+                      ? renderAnnotation((Annotation) NullnessUtils.castNonNull(event.getEvent()))
+                      : renderNetworkEvents(
+                          (NetworkEvent) NullnessUtils.castNonNull(event.getEvent()))));
 
       lastTimestampNanos = event.getTimestamp();
     }

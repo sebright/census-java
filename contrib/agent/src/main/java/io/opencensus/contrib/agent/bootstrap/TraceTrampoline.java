@@ -35,6 +35,7 @@ import javax.annotation.Nullable;
  * <p>{@code TraceTrampoline} is implemented as a static class to allow for easy and fast use from
  * instrumented bytecode. We cannot use dependency injection for the instrumented bytecode.
  */
+@SuppressWarnings("nullness")
 public final class TraceTrampoline {
 
   // Not synchronized to avoid any synchronization costs after initialization.

@@ -78,7 +78,7 @@ public class TracezZPageHandlerTest {
         TracezZPageHandler.create(runningSpanStore, sampledSpanStore);
     when(runningSpanStore.getSummary()).thenReturn(runningSpanStoreSummary);
     when(sampledSpanStore.getSummary()).thenReturn(sampledSpanStoreSummary);
-    tracezZPageHandler.emitHtml(Collections.emptyMap(), output);
+    tracezZPageHandler.emitHtml(Collections.<String, String>emptyMap(), output);
     assertThat(output.toString()).contains(ACTIVE_SPAN_NAME);
     assertThat(output.toString()).contains(SAMPLED_SPAN_NAME);
     assertThat(output.toString()).contains(ACTIVE_SAMPLED_SPAN_NAME);
@@ -91,7 +91,7 @@ public class TracezZPageHandlerTest {
         TracezZPageHandler.create(runningSpanStore, sampledSpanStore);
     when(runningSpanStore.getSummary()).thenReturn(runningSpanStoreSummary);
     when(sampledSpanStore.getSummary()).thenReturn(sampledSpanStoreSummary);
-    tracezZPageHandler.emitHtml(Collections.emptyMap(), output);
+    tracezZPageHandler.emitHtml(Collections.<String, String>emptyMap(), output);
     // 3 active requests
     assertThat(output.toString()).contains("href='?zspanname=TestActiveSpan&ztype=0&zsubtype=0'>3");
     // No active links
@@ -109,7 +109,7 @@ public class TracezZPageHandlerTest {
         TracezZPageHandler.create(runningSpanStore, sampledSpanStore);
     when(runningSpanStore.getSummary()).thenReturn(runningSpanStoreSummary);
     when(sampledSpanStore.getSummary()).thenReturn(sampledSpanStoreSummary);
-    tracezZPageHandler.emitHtml(Collections.emptyMap(), output);
+    tracezZPageHandler.emitHtml(Collections.<String, String>emptyMap(), output);
     // No sampled links (ztype=1);
     assertThat(output.toString()).doesNotContain("href=\"?zspanname=TestActiveSpan&ztype=1");
     // Links for 7 samples [10us, 100us) and 3 samples [1ms, 10ms);
@@ -131,7 +131,7 @@ public class TracezZPageHandlerTest {
         TracezZPageHandler.create(runningSpanStore, sampledSpanStore);
     when(runningSpanStore.getSummary()).thenReturn(runningSpanStoreSummary);
     when(sampledSpanStore.getSummary()).thenReturn(sampledSpanStoreSummary);
-    tracezZPageHandler.emitHtml(Collections.emptyMap(), output);
+    tracezZPageHandler.emitHtml(Collections.<String, String>emptyMap(), output);
     // No sampled links (ztype=1);
     assertThat(output.toString()).doesNotContain("href=\"?zspanname=TestActiveSpan&ztype=2");
     // Links for 7 errors 2 CANCELLED + 5 DEADLINE_EXCEEDED;

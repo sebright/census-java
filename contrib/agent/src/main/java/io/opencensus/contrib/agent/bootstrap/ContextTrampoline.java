@@ -31,6 +31,7 @@ package io.opencensus.contrib.agent.bootstrap;
  * <p>{@code ContextTrampoline} is implemented as a static class to allow for easy and fast use from
  * instrumented bytecode. We cannot use dependency injection for the instrumented bytecode.
  */
+@SuppressWarnings("nullness")
 public final class ContextTrampoline {
 
   // Not synchronized to avoid any synchronization costs after initialization.

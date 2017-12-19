@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkState;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.EvictingQueue;
 import io.opencensus.common.Clock;
+import io.opencensus.implcore.internal.NullnessUtils;
 import io.opencensus.implcore.internal.TimestampConverter;
 import io.opencensus.implcore.trace.internal.ConcurrentIntrusiveList.Element;
 import io.opencensus.trace.Annotation;
@@ -236,9 +237,9 @@ public final class SpanImpl extends Span implements Element<SpanImpl> {
               ? SpanData.Attributes.create(Collections.<String, AttributeValue>emptyMap(), 0)
               : SpanData.Attributes.create(attributes, attributes.getNumberOfDroppedAttributes());
       SpanData.TimedEvents<Annotation> annotationsSpanData =
-          createTimedEvents(annotations, timestampConverter);
+          createTimedEvents(getInitializedAnnotations(), timestampConverter);
       SpanData.TimedEvents<NetworkEvent> networkEventsSpanData =
-          createTimedEvents(networkEvents, timestampConverter);
+          createTimedEvents(getInitializedNetworkEvents(), timestampConverter);
       SpanData.Links linksSpanData =
           links == null
               ? SpanData.Links.create(Collections.<Link>emptyList(), 0)
@@ -249,14 +250,16 @@ public final class SpanImpl extends Span implements Element<SpanImpl> {
           parentSpanId,
           hasRemoteParent,
           name,
-          timestampConverter.convertNanoTime(startNanoTime),
+          NullnessUtils.assertNotNull(timestampConverter).convertNanoTime(startNanoTime),
           attributesSpanData,
           annotationsSpanData,
           networkEventsSpanData,
           linksSpanData,
           null, // Not supported yet.
           hasBeenEnded ? getStatusWithDefault() : null,
-          hasBeenEnded ? timestampConverter.convertNanoTime(endNanoTime) : null);
+          hasBeenEnded
+              ? NullnessUtils.assertNotNull(timestampConverter).convertNanoTime(endNanoTime)
+              : null);
     }
   }
 
@@ -378,8 +381,9 @@ public final class SpanImpl extends Span implements Element<SpanImpl> {
         logger.log(Level.FINE, "Calling end() on an ended Span.");
         return;
       }
-      if (options.getStatus() != null) {
-        status = options.getStatus();
+      Status newStatus = options.getStatus();
+      if (newStatus != null) {
+        status = newStatus;
       }
       sampleToLocalSpanStore = options.getSampleToLocalSpanStore();
       endNanoTime = clock.nowNanos();
@@ -435,7 +439,8 @@ public final class SpanImpl extends Span implements Element<SpanImpl> {
     }
     List<TimedEvent<T>> eventsList = new ArrayList<TimedEvent<T>>(events.events.size());
     for (EventWithNanoTime<T> networkEvent : events.events) {
-      eventsList.add(networkEvent.toSpanDataTimedEvent(timestampConverter));
+      eventsList.add(
+          networkEvent.toSpanDataTimedEvent(NullnessUtils.assertNotNull(timestampConverter)));
     }
     return SpanData.TimedEvents.create(eventsList, events.getNumberOfDroppedEvents());
   }
@@ -573,7 +578,7 @@ public final class SpanImpl extends Span implements Element<SpanImpl> {
     this.clock = clock;
     this.hasBeenEnded = false;
     this.sampleToLocalSpanStore = false;
-    if (getOptions().contains(Options.RECORD_EVENTS)) {
+    if (options != null && options.contains(Options.RECORD_EVENTS)) {
       this.timestampConverter =
           timestampConverter != null ? timestampConverter : TimestampConverter.now(clock);
       startNanoTime = clock.nowNanos();

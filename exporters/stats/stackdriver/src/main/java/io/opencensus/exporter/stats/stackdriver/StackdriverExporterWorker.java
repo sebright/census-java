@@ -155,7 +155,10 @@ final class StackdriverExporterWorker implements Runnable {
     for (View view : viewManager.getAllExportedViews()) {
       if (registerView(view)) {
         // Only upload stats for valid views.
-        viewDataList.add(viewManager.getView(view.getName()));
+        ViewData viewData = viewManager.getView(view.getName());
+        if (viewData != null) {
+          viewDataList.add(viewData);
+        }
       }
     }
 

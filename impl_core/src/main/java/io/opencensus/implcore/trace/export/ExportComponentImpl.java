@@ -18,6 +18,7 @@ package io.opencensus.implcore.trace.export;
 
 import io.opencensus.common.Duration;
 import io.opencensus.implcore.internal.EventQueue;
+import io.opencensus.implcore.internal.SimpleEventQueue;
 import io.opencensus.trace.export.ExportComponent;
 import io.opencensus.trace.export.RunningSpanStore;
 import io.opencensus.trace.export.SampledSpanStore;
@@ -38,16 +39,16 @@ public final class ExportComponentImpl extends ExportComponent {
     return spanExporter;
   }
 
-  @Nullable
   @Override
   public RunningSpanStoreImpl getRunningSpanStore() {
-    return runningSpanStore;
+    return runningSpanStore == null ? new RunningSpanStoreImpl() : runningSpanStore;
   }
 
-  @Nullable
   @Override
   public SampledSpanStoreImpl getSampledSpanStore() {
-    return sampledSpanStore;
+    return sampledSpanStore == null
+        ? new SampledSpanStoreImpl(new SimpleEventQueue())
+        : sampledSpanStore;
   }
 
   /**

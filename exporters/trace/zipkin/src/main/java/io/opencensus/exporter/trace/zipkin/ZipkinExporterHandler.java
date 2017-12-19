@@ -24,6 +24,7 @@ import io.opencensus.common.Function;
 import io.opencensus.common.Functions;
 import io.opencensus.common.Scope;
 import io.opencensus.common.Timestamp;
+import io.opencensus.internal.NullnessUtils;
 import io.opencensus.trace.Annotation;
 import io.opencensus.trace.AttributeValue;
 import io.opencensus.trace.NetworkEvent;
@@ -109,7 +110,7 @@ final class ZipkinExporterHandler extends SpanExporter.Handler {
   static Span generateSpan(SpanData spanData, Endpoint localEndpoint) {
     SpanContext context = spanData.getContext();
     long startTimestamp = toEpochMicros(spanData.getStartTimestamp());
-    long endTimestamp = toEpochMicros(spanData.getEndTimestamp());
+    long endTimestamp = toEpochMicros(NullnessUtils.castNonNull(spanData.getEndTimestamp()));
     Span.Builder spanBuilder =
         Span.newBuilder()
             .traceId(encodeTraceId(context.getTraceId()))
@@ -128,9 +129,12 @@ final class ZipkinExporterHandler extends SpanExporter.Handler {
         spanData.getAttributes().getAttributeMap().entrySet()) {
       spanBuilder.putTag(label.getKey(), attributeValueToString(label.getValue()));
     }
-    spanBuilder.putTag(STATUS_CODE, spanData.getStatus().getCanonicalCode().toString());
-    if (spanData.getStatus().getDescription() != null) {
-      spanBuilder.putTag(STATUS_DESCRIPTION, spanData.getStatus().getDescription());
+    Status status = spanData.getStatus();
+    if (status != null) {
+      spanBuilder.putTag(STATUS_CODE, status.getCanonicalCode().toString());
+      if (status.getDescription() != null) {
+        spanBuilder.putTag(STATUS_DESCRIPTION, status.getDescription());
+      }
     }
 
     for (TimedEvent<Annotation> annotation : spanData.getAnnotations().getEvents()) {
@@ -196,7 +200,10 @@ final class ZipkinExporterHandler extends SpanExporter.Handler {
       try {
         sender.sendSpans(encodedSpans).execute();
       } catch (IOException e) {
-        tracer.getCurrentSpan().setStatus(Status.UNKNOWN.withDescription(e.getMessage()));
+        String msg = e.getMessage();
+        tracer
+            .getCurrentSpan()
+            .setStatus(Status.UNKNOWN.withDescription(msg == null ? e.getClass().getName() : msg));
         throw new RuntimeException(e); // TODO: should we instead do drop metrics?
       }
     } finally {

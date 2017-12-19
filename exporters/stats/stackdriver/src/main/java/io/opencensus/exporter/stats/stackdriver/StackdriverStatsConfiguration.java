@@ -26,6 +26,8 @@ import javax.annotation.concurrent.Immutable;
 /** Configurations for {@link StackdriverStatsExporter}. */
 @AutoValue
 @Immutable
+@AutoValue.CopyAnnotations
+@SuppressWarnings("nullness")
 public abstract class StackdriverStatsConfiguration {
 
   StackdriverStatsConfiguration() {}
