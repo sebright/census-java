@@ -250,7 +250,7 @@ public final class SpanImpl extends Span implements Element<SpanImpl> {
           parentSpanId,
           hasRemoteParent,
           name,
-          NullnessUtils.assertNotNull(timestampConverter).convertNanoTime(startNanoTime),
+          NullnessUtils.castNonNull(timestampConverter).convertNanoTime(startNanoTime),
           attributesSpanData,
           annotationsSpanData,
           networkEventsSpanData,
@@ -258,7 +258,7 @@ public final class SpanImpl extends Span implements Element<SpanImpl> {
           null, // Not supported yet.
           hasBeenEnded ? getStatusWithDefault() : null,
           hasBeenEnded
-              ? NullnessUtils.assertNotNull(timestampConverter).convertNanoTime(endNanoTime)
+              ? NullnessUtils.castNonNull(timestampConverter).convertNanoTime(endNanoTime)
               : null);
     }
   }
@@ -381,9 +381,8 @@ public final class SpanImpl extends Span implements Element<SpanImpl> {
         logger.log(Level.FINE, "Calling end() on an ended Span.");
         return;
       }
-      Status newStatus = options.getStatus();
-      if (newStatus != null) {
-        status = newStatus;
+      if (options.getStatus() != null) {
+        status = options.getStatus();
       }
       sampleToLocalSpanStore = options.getSampleToLocalSpanStore();
       endNanoTime = clock.nowNanos();
@@ -440,7 +439,7 @@ public final class SpanImpl extends Span implements Element<SpanImpl> {
     List<TimedEvent<T>> eventsList = new ArrayList<TimedEvent<T>>(events.events.size());
     for (EventWithNanoTime<T> networkEvent : events.events) {
       eventsList.add(
-          networkEvent.toSpanDataTimedEvent(NullnessUtils.assertNotNull(timestampConverter)));
+          networkEvent.toSpanDataTimedEvent(NullnessUtils.castNonNull(timestampConverter)));
     }
     return SpanData.TimedEvents.create(eventsList, events.getNumberOfDroppedEvents());
   }

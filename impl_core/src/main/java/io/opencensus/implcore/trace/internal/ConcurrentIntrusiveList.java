@@ -108,11 +108,11 @@ public final class ConcurrentIntrusiveList<T extends Element<T>> {
     } else if (element.getNext() == null) {
       // This is the last element, and there is at least another element because
       // element.getPrev() != null.
-      NullnessUtils.assertNotNull(element.getPrev()).setNext(null);
+      NullnessUtils.castNonNull(element.getPrev()).setNext(null);
       element.setPrev(null);
     } else {
-      NullnessUtils.assertNotNull(element.getPrev()).setNext(element.getNext());
-      NullnessUtils.assertNotNull(element.getNext()).setPrev(element.getPrev());
+      NullnessUtils.castNonNull(element.getPrev()).setNext(element.getNext());
+      NullnessUtils.castNonNull(element.getNext()).setPrev(element.getPrev());
       element.setNext(null);
       element.setPrev(null);
     }

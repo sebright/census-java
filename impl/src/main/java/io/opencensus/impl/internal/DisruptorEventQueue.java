@@ -175,7 +175,7 @@ public final class DisruptorEventQueue implements EventQueue {
   private static final class DisruptorEventHandler implements EventHandler<DisruptorEvent> {
     @Override
     public void onEvent(DisruptorEvent event, long sequence, boolean endOfBatch) {
-      NullnessUtils.assertNotNull(event.getEntry()).process();
+      NullnessUtils.castNonNull(event.getEntry()).process();
     }
   }
 }

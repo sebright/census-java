@@ -313,7 +313,7 @@ abstract class MutableViewData {
           getTagValues(getTagMap(context), super.view.getColumns());
       refreshBucketList(timestamp);
       // It is always the last bucket that does the recording.
-      NullnessUtils.assertNotNull(buckets.peekLast()).record(tagValues, value);
+      NullnessUtils.castNonNull(buckets.peekLast()).record(tagValues, value);
     }
 
     @Override
@@ -351,7 +351,7 @@ abstract class MutableViewData {
       if (buckets.size() != N + 1) {
         throw new AssertionError("Bucket list must have exactly " + (N + 1) + " buckets.");
       }
-      Timestamp startOfLastBucket = NullnessUtils.assertNotNull(buckets.peekLast()).getStart();
+      Timestamp startOfLastBucket = NullnessUtils.castNonNull(buckets.peekLast()).getStart();
       // TODO(songya): decide what to do when time goes backwards
       checkArgument(
           now.compareTo(startOfLastBucket) >= 0,
@@ -368,7 +368,7 @@ abstract class MutableViewData {
 
       if (!buckets.isEmpty()) {
         startOfNewBucket =
-            NullnessUtils.assertNotNull(buckets.peekLast()).getStart().addDuration(bucketDuration);
+            NullnessUtils.castNonNull(buckets.peekLast()).getStart().addDuration(bucketDuration);
       } else {
         // Initialize bucket list. Should only enter this block once.
         startOfNewBucket = subtractDuration(now, totalDuration);
@@ -418,8 +418,8 @@ abstract class MutableViewData {
         Aggregation aggregation,
         Timestamp now) {
       // Put fractional stats of the head (oldest) bucket.
-      IntervalBucket head = NullnessUtils.assertNotNull(buckets.peekFirst());
-      IntervalBucket tail = NullnessUtils.assertNotNull(buckets.peekLast());
+      IntervalBucket head = NullnessUtils.castNonNull(buckets.peekFirst());
+      IntervalBucket tail = NullnessUtils.castNonNull(buckets.peekLast());
       double fractionTail = tail.getFraction(now);
       // TODO(songya): decide what to do when time goes backwards
       checkArgument(
