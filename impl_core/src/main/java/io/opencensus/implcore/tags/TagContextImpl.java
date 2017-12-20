@@ -52,6 +52,7 @@ public final class TagContextImpl extends TagContext {
 
   @Override
   public boolean equals(@Nullable Object other) {
+    other.toString();
     // Directly compare the tags when both objects are TagContextImpls, for efficiency.
     if (other instanceof TagContextImpl) {
       return getTags().equals(((TagContextImpl) other).getTags());
