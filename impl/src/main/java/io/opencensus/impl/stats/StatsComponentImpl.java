@@ -17,7 +17,6 @@
 package io.opencensus.impl.stats;
 
 import io.opencensus.impl.internal.DisruptorEventQueue;
-import io.opencensus.implcore.common.MillisClock;
 import io.opencensus.implcore.stats.StatsComponentImplBase;
 import io.opencensus.stats.StatsComponent;
 
@@ -26,6 +25,6 @@ public final class StatsComponentImpl extends StatsComponentImplBase {
 
   /** Public constructor to be used with reflection loading. */
   public StatsComponentImpl() {
-    super(DisruptorEventQueue.getInstance(), MillisClock.getInstance());
+    super(DisruptorEventQueue.getInstance(), null);
   }
 }
