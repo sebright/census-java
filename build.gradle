@@ -103,11 +103,11 @@ subprojects {
             ]
         }
         it.options.encoding = "UTF-8"
-        // TODO(bdrutu): Enable when fix the issue with configuring bootstrap class.
-        // [options] bootstrap class path not set in conjunction with -source 1.6
-        if (JavaVersion.current().isJava8Compatible()) {
-            it.options.compilerArgs += ["-Werror"]
-        }
+        // // TODO(bdrutu): Enable when fix the issue with configuring bootstrap class.
+        // // [options] bootstrap class path not set in conjunction with -source 1.6
+        // if (JavaVersion.current().isJava8Compatible()) {
+        //     it.options.compilerArgs += ["-Werror"]
+        // }
     }
 
     compileTestJava {
