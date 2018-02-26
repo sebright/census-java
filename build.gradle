@@ -68,7 +68,7 @@ subprojects {
     [compileJava, compileTestJava].each() {
         // We suppress the "processing" warning as suggested in
         // https://groups.google.com/forum/#!topic/bazel-discuss/_R3A9TJSoPM
-        it.options.compilerArgs += ["-Xlint:all", "-Xlint:-try", "-Xlint:-processing", "-Xlint:-options"]
+        it.options.compilerArgs += ["-Xlint:all", "-Xlint:-try", "-Xlint:-processing"]
         if (useErrorProne) {
             if (JavaVersion.current().isJava8Compatible()) {
                 it.options.compilerArgs += ["-XepDisableWarningsInGeneratedCode"]
