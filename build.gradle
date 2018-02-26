@@ -105,7 +105,10 @@ subprojects {
             ]
         }
         it.options.encoding = "UTF-8"
-        it.options.compilerArgs += ["-Werror"]
+        if (!JavaVersion.current().isJava9()) {
+	    // TODO(sebright): Enable -Werror for Java 9 once we upgrade AutoValue (issue #1017).
+            it.options.compilerArgs += ["-Werror"]
+	}
         if (JavaVersion.current().isJava7()) {
 	    // Suppress all deprecation warnings with Java 7, since there are some bugs in its handling of
 	    // @SuppressWarnings. See
