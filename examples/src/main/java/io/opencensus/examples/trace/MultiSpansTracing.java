@@ -21,7 +21,9 @@ import io.opencensus.trace.Span;
 import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
 
-/** Example showing how to directly create a child {@link Span} and add annotations. */
+/**
+ * Example showing how to directly create a child {@link Span} and add annotations.
+ */
 public final class MultiSpansTracing {
   // Per class Tracer.
   private static final Tracer tracer = Tracing.getTracer();
