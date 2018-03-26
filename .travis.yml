@@ -27,6 +27,10 @@ matrix:
     env: TASK=CHECKER_FRAMEWORK
     os: linux
 
+  - jdk: openjdk8
+    env: TASK=CHECKER_FRAMEWORK
+    os: linux
+
   - env: TASK=CHECK_GIT_HISTORY
     os: linux
 
