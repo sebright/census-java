@@ -98,6 +98,9 @@ public abstract class Duration implements Comparable<Duration> {
   @Override
   public abstract boolean equals(@Nullable Object other);
 
+  @Override
+  public abstract int hashCode();
+
   /**
    * Compares this {@code Duration} to the specified {@code Duration}.
    *

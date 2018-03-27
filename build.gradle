@@ -151,7 +151,7 @@ subprojects {
     }
 
     ext {
-        autoValueVersion = '1.5.4'
+        autoValueVersion = '1.6'
         findBugsVersion = '3.0.1'
         errorProneVersion = '2.2.0'
         grpcVersion = '1.10.0'
@@ -212,7 +212,8 @@ subprojects {
             checkerFrameworkJavac "org.checkerframework:compiler:${checkerFrameworkVersion}"
             compileOnly "org.checkerframework:checker:${checkerFrameworkVersion}"
             compile "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
-            compileOnly libraries.auto_value
+            compileOnly "com.google.auto.value:auto-value:1.6",
+                        "com.google.auto.value:auto-value-annotations:1.6"
         }
 
         compile libraries.errorprone,
