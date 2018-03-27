@@ -32,9 +32,6 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 @AutoValue
-// Suppress Checker Framework warning about missing @Nullable in generated equals method.
-@AutoValue.CopyAnnotations
-@SuppressWarnings("nullness")
 public abstract class BucketBoundaries {
 
   /**
@@ -66,4 +63,7 @@ public abstract class BucketBoundaries {
    * @since 0.8
    */
   public abstract List<Double> getBoundaries();
+
+  @Override
+  public abstract boolean equals(@org.checkerframework.checker.nullness.qual.Nullable Object other);
 }

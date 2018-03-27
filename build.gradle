@@ -151,7 +151,7 @@ subprojects {
     }
 
     ext {
-        autoValueVersion = '1.4'
+        autoValueVersion = useCheckerFramework ? '1.6' : '1.4'
         findBugsVersion = '3.0.1'
         errorProneVersion = '2.2.0'
         grpcVersion = '1.10.0'
@@ -205,18 +205,19 @@ subprojects {
     }
 
     dependencies {
+        ext.checkerFrameworkVersion = '2.3.2'
         if (useCheckerFramework) {
-            ext.checkerFrameworkVersion = '2.3.2'
             ext.jdkVersion = 'jdk8'
             checkerFrameworkAnnotatedJDK "org.checkerframework:${jdkVersion}:${checkerFrameworkVersion}"
             checkerFrameworkJavac "org.checkerframework:compiler:${checkerFrameworkVersion}"
             compileOnly "org.checkerframework:checker:${checkerFrameworkVersion}"
-            compile "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
-            compileOnly libraries.auto_value
+            compileOnly "com.google.auto.value:auto-value:${autoValueVersion}",
+                        "com.google.auto.value:auto-value-annotations:${autoValueVersion}"
         }
 
         compileOnly libraries.errorprone,
-                    libraries.jsr305
+                    libraries.jsr305,
+                    "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
 
         testCompile libraries.guava_testlib,
                 libraries.junit,

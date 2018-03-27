@@ -34,9 +34,6 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 @AutoValue
-// Suppress Checker Framework warning about missing @Nullable in generated equals method.
-@AutoValue.CopyAnnotations
-@SuppressWarnings("nullness")
 public abstract class Duration implements Comparable<Duration> {
   private static final Duration ZERO = create(0, 0);
 
@@ -96,6 +93,9 @@ public abstract class Duration implements Comparable<Duration> {
    * @since 0.5
    */
   public abstract int getNanos();
+
+  @Override
+  public abstract boolean equals(@org.checkerframework.checker.nullness.qual.Nullable Object other);
 
   /**
    * Compares this {@code Duration} to the specified {@code Duration}.

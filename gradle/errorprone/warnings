@@ -1,6 +1,9 @@
 # NarrowingCompoundAssignment is marked as WARN
 # detects errors in autovalue generated code.
 
+# EqualsHashCode is turned off because each AutoValue class must override equals
+# to apply a Nullable annotation to the parameter.
+
 errorProneWarnings = \
 -Xep:AmbiguousMethodReference:ERROR,\
 -Xep:ArgumentSelectionDefectChecker:ERROR,\
@@ -20,7 +23,7 @@ errorProneWarnings = \
 -Xep:DateFormatConstant:ERROR,\
 -Xep:DefaultCharset:ERROR,\
 -Xep:DoubleCheckedLocking:ERROR,\
--Xep:EqualsHashCode:ERROR,\
+-Xep:EqualsHashCode:OFF,\
 -Xep:EqualsIncompatibleType:ERROR,\
 -Xep:FallThrough:ERROR,\
 -Xep:Finally:ERROR,\

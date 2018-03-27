@@ -83,6 +83,9 @@ public abstract class Measure {
   // Prevents this class from being subclassed anywhere else.
   private Measure() {}
 
+  @Override
+  public abstract boolean equals(@org.checkerframework.checker.nullness.qual.Nullable Object other);
+
   /**
    * {@link Measure} with {@code Double} typed values.
    *
@@ -90,9 +93,6 @@ public abstract class Measure {
    */
   @Immutable
   @AutoValue
-  // Suppress Checker Framework warning about missing @Nullable in generated equals method.
-  @AutoValue.CopyAnnotations
-  @SuppressWarnings("nullness")
   public abstract static class MeasureDouble extends Measure {
 
     MeasureDouble() {}
@@ -140,9 +140,6 @@ public abstract class Measure {
    */
   @Immutable
   @AutoValue
-  // Suppress Checker Framework warning about missing @Nullable in generated equals method.
-  @AutoValue.CopyAnnotations
-  @SuppressWarnings("nullness")
   public abstract static class MeasureLong extends Measure {
 
     MeasureLong() {}

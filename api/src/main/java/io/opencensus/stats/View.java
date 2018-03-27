@@ -38,9 +38,8 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 @AutoValue
-// Suppress Checker Framework warning about missing @Nullable in generated equals method.
 @AutoValue.CopyAnnotations
-@SuppressWarnings({"nullness", "deprecation"})
+@SuppressWarnings("deprecation")
 public abstract class View {
 
   @VisibleForTesting static final int NAME_MAX_LENGTH = 255;
@@ -157,6 +156,9 @@ public abstract class View {
         AggregationWindow.Cumulative.create());
   }
 
+  @Override
+  public abstract boolean equals(@org.checkerframework.checker.nullness.qual.Nullable Object other);
+
   /**
    * The name of a {@code View}.
    *
@@ -165,9 +167,6 @@ public abstract class View {
   // This type should be used as the key when associating data with Views.
   @Immutable
   @AutoValue
-  // Suppress Checker Framework warning about missing @Nullable in generated equals method.
-  @AutoValue.CopyAnnotations
-  @SuppressWarnings("nullness")
   public abstract static class Name {
 
     Name() {}
@@ -196,6 +195,10 @@ public abstract class View {
           "Name should be a ASCII string with a length no greater than 255 characters.");
       return new AutoValue_View_Name(name);
     }
+
+    @Override
+    public abstract boolean equals(
+        @org.checkerframework.checker.nullness.qual.Nullable Object other);
   }
 
   /**
@@ -229,9 +232,7 @@ public abstract class View {
     @Deprecated
     @Immutable
     @AutoValue
-    // Suppress Checker Framework warning about missing @Nullable in generated equals method.
     @AutoValue.CopyAnnotations
-    @SuppressWarnings("nullness")
     public abstract static class Cumulative extends AggregationWindow {
 
       private static final Cumulative CUMULATIVE =
@@ -258,6 +259,10 @@ public abstract class View {
           Function<? super AggregationWindow, T> defaultFunction) {
         return p0.apply(this);
       }
+
+      @Override
+      public abstract boolean equals(
+          @org.checkerframework.checker.nullness.qual.Nullable Object other);
     }
 
     /**
@@ -269,9 +274,7 @@ public abstract class View {
     @Deprecated
     @Immutable
     @AutoValue
-    // Suppress Checker Framework warning about missing @Nullable in generated equals method.
     @AutoValue.CopyAnnotations
-    @SuppressWarnings("nullness")
     public abstract static class Interval extends AggregationWindow {
 
       private static final Duration ZERO = Duration.create(0, 0);
@@ -308,6 +311,10 @@ public abstract class View {
           Function<? super AggregationWindow, T> defaultFunction) {
         return p1.apply(this);
       }
+
+      @Override
+      public abstract boolean equals(
+          @org.checkerframework.checker.nullness.qual.Nullable Object other);
     }
   }
 }

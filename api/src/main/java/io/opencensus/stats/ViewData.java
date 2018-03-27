@@ -54,9 +54,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @Immutable
 @AutoValue
-// Suppress Checker Framework warning about missing @Nullable in generated equals method.
 @AutoValue.CopyAnnotations
-@SuppressWarnings({"nullness", "deprecation"})
+@SuppressWarnings("deprecation")
 public abstract class ViewData {
 
   // Prevents this class from being subclassed anywhere else.
@@ -75,6 +74,8 @@ public abstract class ViewData {
    *
    * @since 0.8
    */
+  @AutoValue.CopyAnnotations
+  @SuppressWarnings("nullness")
   public abstract Map<List</*@Nullable*/ TagValue>, AggregationData> getAggregationMap();
 
   /**
@@ -125,9 +126,10 @@ public abstract class ViewData {
       Map<? extends List</*@Nullable*/ TagValue>, ? extends AggregationData> map,
       final AggregationWindowData windowData) {
     checkWindow(view.getWindow(), windowData);
-    final Map<List<TagValue>, AggregationData> deepCopy =
-        new HashMap<List<TagValue>, AggregationData>();
-    for (Entry<? extends List<TagValue>, ? extends AggregationData> entry : map.entrySet()) {
+    final Map<List</*@Nullable*/ TagValue>, AggregationData> deepCopy =
+        new HashMap<List</*@Nullable*/ TagValue>, AggregationData>();
+    for (Entry<? extends List</*@Nullable*/ TagValue>, ? extends AggregationData> entry :
+        map.entrySet()) {
       checkAggregation(view.getAggregation(), entry.getValue(), view.getMeasure());
       deepCopy.put(
           Collections.unmodifiableList(new ArrayList</*@Nullable*/ TagValue>(entry.getKey())),
@@ -137,7 +139,7 @@ public abstract class ViewData {
         new Function<ViewData.AggregationWindowData.CumulativeData, ViewData>() {
           @Override
           public ViewData apply(ViewData.AggregationWindowData.CumulativeData arg) {
-            return new AutoValue_ViewData(
+            return createInternal(
                 view, Collections.unmodifiableMap(deepCopy), arg, arg.getStart(), arg.getEnd());
           }
         },
@@ -145,7 +147,7 @@ public abstract class ViewData {
           @Override
           public ViewData apply(ViewData.AggregationWindowData.IntervalData arg) {
             Duration duration = ((View.AggregationWindow.Interval) view.getWindow()).getDuration();
-            return new AutoValue_ViewData(
+            return createInternal(
                 view,
                 Collections.unmodifiableMap(deepCopy),
                 arg,
@@ -174,19 +176,32 @@ public abstract class ViewData {
       Map<? extends List</*@Nullable*/ TagValue>, ? extends AggregationData> map,
       Timestamp start,
       Timestamp end) {
-    Map<List<TagValue>, AggregationData> deepCopy = new HashMap<List<TagValue>, AggregationData>();
-    for (Entry<? extends List<TagValue>, ? extends AggregationData> entry : map.entrySet()) {
+    Map<List</*@Nullable*/ TagValue>, AggregationData> deepCopy =
+        new HashMap<List</*@Nullable*/ TagValue>, AggregationData>();
+    for (Entry<? extends List</*@Nullable*/ TagValue>, ? extends AggregationData> entry :
+        map.entrySet()) {
       checkAggregation(view.getAggregation(), entry.getValue(), view.getMeasure());
       deepCopy.put(
           Collections.unmodifiableList(new ArrayList</*@Nullable*/ TagValue>(entry.getKey())),
           entry.getValue());
     }
-    return new AutoValue_ViewData(
+    return createInternal(
         view,
         Collections.unmodifiableMap(deepCopy),
         AggregationWindowData.CumulativeData.create(start, end),
         start,
         end);
+  }
+
+  // Suppress nullness warning about Nullable TagValues in the aggregation map.
+  @SuppressWarnings("nullness")
+  private static ViewData createInternal(
+      View view,
+      Map<List</*@Nullable*/ TagValue>, AggregationData> aggregationMap,
+      AggregationWindowData window,
+      Timestamp start,
+      Timestamp end) {
+    return new AutoValue_ViewData(view, aggregationMap, window, start, end);
   }
 
   private static void checkWindow(
@@ -247,7 +262,7 @@ public abstract class ViewData {
                     return null;
                   }
                 },
-                Functions.<Void>throwAssertionError());
+                Functions.</*@Nullable*/ Void>throwAssertionError());
             return null;
           }
         },
@@ -278,7 +293,7 @@ public abstract class ViewData {
             return null;
           }
         },
-        Functions.<Void>throwAssertionError());
+        Functions.</*@Nullable*/ Void>throwAssertionError());
   }
 
   private static String createErrorMessageForAggregation(
@@ -289,6 +304,9 @@ public abstract class ViewData {
         + " AggregationData: "
         + aggregationData;
   }
+
+  @Override
+  public abstract boolean equals(@org.checkerframework.checker.nullness.qual.Nullable Object other);
 
   /**
    * The {@code AggregationWindowData} for a {@link ViewData}.
@@ -321,9 +339,7 @@ public abstract class ViewData {
     @Deprecated
     @Immutable
     @AutoValue
-    // Suppress Checker Framework warning about missing @Nullable in generated equals method.
     @AutoValue.CopyAnnotations
-    @SuppressWarnings("nullness")
     public abstract static class CumulativeData extends AggregationWindowData {
 
       CumulativeData() {}
@@ -363,6 +379,10 @@ public abstract class ViewData {
         }
         return new AutoValue_ViewData_AggregationWindowData_CumulativeData(start, end);
       }
+
+      @Override
+      public abstract boolean equals(
+          @org.checkerframework.checker.nullness.qual.Nullable Object other);
     }
 
     /**
@@ -374,9 +394,7 @@ public abstract class ViewData {
     @Deprecated
     @Immutable
     @AutoValue
-    // Suppress Checker Framework warning about missing @Nullable in generated equals method.
     @AutoValue.CopyAnnotations
-    @SuppressWarnings("nullness")
     public abstract static class IntervalData extends AggregationWindowData {
 
       IntervalData() {}
@@ -405,6 +423,10 @@ public abstract class ViewData {
       public static IntervalData create(Timestamp end) {
         return new AutoValue_ViewData_AggregationWindowData_IntervalData(end);
       }
+
+      @Override
+      public abstract boolean equals(
+          @org.checkerframework.checker.nullness.qual.Nullable Object other);
     }
   }
 }
