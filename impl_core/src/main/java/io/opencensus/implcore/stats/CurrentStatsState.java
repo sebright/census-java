@@ -16,9 +16,9 @@
 
 package io.opencensus.implcore.stats;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import io.opencensus.internal.Utils;
 import io.opencensus.stats.StatsCollectionState;
 import io.opencensus.stats.StatsComponent;
 import javax.annotation.concurrent.GuardedBy;
@@ -55,7 +55,7 @@ public final class CurrentStatsState {
     if (state == currentState) {
       return false;
     } else {
-      currentState = checkNotNull(state, "state");
+      currentState = Utils.checkNotNull(state, "state");
       return true;
     }
   }

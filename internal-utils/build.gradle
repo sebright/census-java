@@ -1,0 +1,8 @@
+description = 'OpenCensus Internal Utilities'
+
+dependencies {
+
+    signature "org.codehaus.mojo.signature:java16:+@signature"
+}
+
+// javadoc.exclude 'io/opencensus/internal/**'

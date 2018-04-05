@@ -7,6 +7,7 @@ buildscript {
         }
     }
     dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.2"
         classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.4.2'
         classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.13'
         classpath "net.ltgt.gradle:gradle-apt-plugin:0.10"
@@ -25,6 +26,7 @@ def useErrorProne = !useCheckerFramework
 
 subprojects {
     apply plugin: "checkstyle"
+    apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'maven'
     apply plugin: 'idea'
     apply plugin: 'eclipse'

@@ -1,8 +1,10 @@
 description = 'OpenCensus Core Implementation'
 
 dependencies {
-    compile project(':opencensus-api'),
-            libraries.guava
+    compile libraries.guava,
+            libraries.grpc_context,
+            project(path: ':opencensus-api', configuration: 'shadow'),
+            project(':opencensus-internal-utils')
 
     compileOnly libraries.auto_value
 
@@ -10,6 +12,13 @@ dependencies {
             project(':opencensus-testing')
 
     signature "org.codehaus.mojo.signature:java16:+@signature"
+}
+
+shadowJar {
+    relocate 'io.opencensus.utils', 'shadow.io.opencensus.implcore.utils'
+    dependencies {
+        include(project(':opencensus-internal-utils'))
+    }
 }
 
 javadoc.exclude 'io/opencensus/internal/**'
