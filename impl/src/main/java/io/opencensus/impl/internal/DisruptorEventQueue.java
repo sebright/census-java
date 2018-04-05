@@ -24,7 +24,7 @@ import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import io.opencensus.implcore.internal.DaemonThreadFactory;
 import io.opencensus.implcore.internal.EventQueue;
-import io.opencensus.internal.Utils;
+import io.opencensus.utils.Utils;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 

@@ -18,9 +18,9 @@ package io.opencensus.implcore.stats;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import io.opencensus.internal.Utils;
 import io.opencensus.stats.StatsCollectionState;
 import io.opencensus.stats.StatsComponent;
+import io.opencensus.utils.Utils;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
