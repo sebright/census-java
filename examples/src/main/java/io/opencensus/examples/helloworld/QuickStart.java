@@ -63,7 +63,7 @@ public final class QuickStart {
   // Create view to see the processed video size distribution broken down by frontend.
   // The view has bucket boundaries (0, 16 * MiB, 65536 * MiB) that will group measure
   // values into histogram buckets.
-  private static final View.Name VIDEO_SIZE_VIEW_NAME = View.Name.create("my.org/views/video_size");
+  private static final View.Name VIDEO_SIZE_VIEW_NAME = View.Name.create("my.org/views/video_size ");
   private static final View VIDEO_SIZE_VIEW =
       View.create(
           VIDEO_SIZE_VIEW_NAME,
