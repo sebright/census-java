@@ -20,6 +20,7 @@ import io.opencensus.common.ExperimentalApi;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.SpanContext;
 import io.opencensus.trace.unsafe.ContextUtils;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +32,11 @@ import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.impl.ThreadContextDataInjector;
 import org.apache.logging.log4j.spi.ReadOnlyThreadContextMap;
+import org.apache.logging.log4j.util.BiConsumer;
 import org.apache.logging.log4j.util.ReadOnlyStringMap;
 import org.apache.logging.log4j.util.SortedArrayStringMap;
 import org.apache.logging.log4j.util.StringMap;
+import org.apache.logging.log4j.util.TriConsumer;
 
 /**
  * A Log4j {@link ContextDataInjector} that adds OpenCensus tracing data to log events.
@@ -176,7 +179,8 @@ public final class OpenCensusTraceContextDataInjector implements ContextDataInje
   @Override
   public StringMap injectContextData(@Nullable List<Property> properties, StringMap reusable) {
     if (properties == null || properties.isEmpty()) {
-      return rawContextDataStringMap();
+      StringMap result = rawContextDataStringMap();
+      return result == null ? new SortedArrayStringMap() : result;
     }
     // Context data has precedence over configuration properties.
     ThreadContextDataInjector.copyProperties(properties, reusable);
@@ -186,10 +190,12 @@ public final class OpenCensusTraceContextDataInjector implements ContextDataInje
 
   @Override
   public ReadOnlyStringMap rawContextData() {
-    return rawContextDataStringMap();
+    StringMap result = rawContextDataStringMap();
+    return result == null ? EmptyReadOnlyStringMap.INSTANCE : result;
   }
 
   // This method avoids getting the current span when the feature is disabled, for efficiency.
+  @Nullable
   private StringMap rawContextDataStringMap() {
     switch (spanSelection) {
       case NO_SPANS:
@@ -212,9 +218,10 @@ public final class OpenCensusTraceContextDataInjector implements ContextDataInje
     return span == null ? SpanContext.INVALID : span.getContext();
   }
 
+  @Nullable
   private static StringMap getContextData() {
     ReadOnlyThreadContextMap contextMap = ThreadContext.getThreadContextMap();
-    return contextMap == null ? new SortedArrayStringMap() : contextMap.getReadOnlyContextData();
+    return contextMap == null ? null : contextMap.getReadOnlyContextData();
   }
 
   private static StringMap getContextAndTracingData(SpanContext spanContext) {
@@ -226,5 +233,45 @@ public final class OpenCensusTraceContextDataInjector implements ContextDataInje
     map.put(
         TRACE_SAMPLED_CONTEXT_KEY, spanContext.getTraceOptions().isSampled() ? "true" : "false");
     return new SortedArrayStringMap(map);
+  }
+
+  private static final class EmptyReadOnlyStringMap implements ReadOnlyStringMap {
+    private static final long serialVersionUID = 0L;
+
+    static final ReadOnlyStringMap INSTANCE = new EmptyReadOnlyStringMap();
+
+    private EmptyReadOnlyStringMap() {}
+
+    @Override
+    public boolean containsKey(String key) {
+      return false;
+    }
+
+    @Override
+    public <V> void forEach(BiConsumer<String, ? super V> action) {}
+
+    @Override
+    public <V, S> void forEach(TriConsumer<String, ? super V, S> action, S state) {}
+
+    @Override
+    @SuppressWarnings("TypeParameterUnusedInFormals") // This is an overridden method.
+    public <V> V getValue(String key) {
+      return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+      return true;
+    }
+
+    @Override
+    public int size() {
+      return 0;
+    }
+
+    @Override
+    public Map<String, String> toMap() {
+      return Collections.<String, String>emptyMap();
+    }
   }
 }
