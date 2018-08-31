@@ -20,6 +20,7 @@ import io.opencensus.common.ExperimentalApi;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.SpanContext;
 import io.opencensus.trace.unsafe.ContextUtils;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -29,6 +30,7 @@ import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.impl.ThreadContextDataInjector;
+import org.apache.logging.log4j.spi.ReadOnlyThreadContextMap;
 import org.apache.logging.log4j.util.SortedArrayStringMap;
 import org.apache.logging.log4j.util.StringMap;
 
@@ -205,14 +207,15 @@ public final class OpenCensusTraceContextDataInjector implements ContextDataInje
     return span == null ? SpanContext.INVALID : span.getContext();
   }
 
-  // TODO(sebright): Improve the implementation of this method, including handling null.
   private static StringMap getContextData() {
-    return ThreadContext.getThreadContextMap().getReadOnlyContextData();
+    ReadOnlyThreadContextMap contextMap = ThreadContext.getThreadContextMap();
+    return contextMap == null ? new SortedArrayStringMap() : contextMap.getReadOnlyContextData();
   }
 
-  // TODO(sebright): Improve the implementation of this method, including handling null.
   private static StringMap getContextAndTracingData(SpanContext spanContext) {
-    Map<String, String> map = ThreadContext.getThreadContextMap().getCopy();
+    ReadOnlyThreadContextMap contextMap = ThreadContext.getThreadContextMap();
+    Map<String, String> map =
+        contextMap == null ? new HashMap<String, String>() : contextMap.getCopy();
     map.put(TRACE_ID_CONTEXT_KEY, spanContext.getTraceId().toLowerBase16());
     map.put(SPAN_ID_CONTEXT_KEY, spanContext.getSpanId().toLowerBase16());
     map.put(
