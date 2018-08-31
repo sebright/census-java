@@ -179,8 +179,7 @@ public final class OpenCensusTraceContextDataInjector implements ContextDataInje
   @Override
   public StringMap injectContextData(@Nullable List<Property> properties, StringMap reusable) {
     if (properties == null || properties.isEmpty()) {
-      StringMap result = rawContextDataStringMap();
-      return result == null ? new SortedArrayStringMap() : result;
+      return threadSafeRawContextDataStringMap();
     }
     // Context data has precedence over configuration properties.
     ThreadContextDataInjector.copyProperties(properties, reusable);
@@ -188,24 +187,36 @@ public final class OpenCensusTraceContextDataInjector implements ContextDataInje
     return reusable;
   }
 
+  // This method avoids getting the current span when the feature is disabled, for efficiency.
   @Override
   public ReadOnlyStringMap rawContextData() {
-    StringMap result = rawContextDataStringMap();
-    return result == null ? EmptyReadOnlyStringMap.INSTANCE : result;
-  }
-
-  // This method avoids getting the current span when the feature is disabled, for efficiency.
-  @Nullable
-  private StringMap rawContextDataStringMap() {
     switch (spanSelection) {
       case NO_SPANS:
-        return getContextData();
+        return getContextDataReadOnlyStringMap();
       case SAMPLED_SPANS:
         SpanContext spanContext = getCurrentSpanContext();
         if (spanContext.getTraceOptions().isSampled()) {
           return getContextAndTracingData(spanContext);
         } else {
-          return getContextData();
+          return getContextDataReadOnlyStringMap();
+        }
+      case ALL_SPANS:
+        return getContextAndTracingData(getCurrentSpanContext());
+    }
+    throw new AssertionError("Unknown spanSelection: " + spanSelection);
+  }
+
+  // This method avoids getting the current span when the feature is disabled, for efficiency.
+  private StringMap threadSafeRawContextDataStringMap() {
+    switch (spanSelection) {
+      case NO_SPANS:
+        return getContextDataStringMap();
+      case SAMPLED_SPANS:
+        SpanContext spanContext = getCurrentSpanContext();
+        if (spanContext.getTraceOptions().isSampled()) {
+          return getContextAndTracingData(spanContext);
+        } else {
+          return getContextDataStringMap();
         }
       case ALL_SPANS:
         return getContextAndTracingData(getCurrentSpanContext());
@@ -218,10 +229,18 @@ public final class OpenCensusTraceContextDataInjector implements ContextDataInje
     return span == null ? SpanContext.INVALID : span.getContext();
   }
 
-  @Nullable
-  private static StringMap getContextData() {
+  private static StringMap getContextDataStringMap() {
     ReadOnlyThreadContextMap contextMap = ThreadContext.getThreadContextMap();
-    return contextMap == null ? null : contextMap.getReadOnlyContextData();
+    return contextMap == null
+        ? new SortedArrayStringMap()
+        : new SortedArrayStringMap(contextMap.getReadOnlyContextData());
+  }
+
+  private static ReadOnlyStringMap getContextDataReadOnlyStringMap() {
+    ReadOnlyThreadContextMap contextMap = ThreadContext.getThreadContextMap();
+    return contextMap == null
+        ? EmptyReadOnlyStringMap.INSTANCE
+        : contextMap.getReadOnlyContextData();
   }
 
   private static StringMap getContextAndTracingData(SpanContext spanContext) {
