@@ -31,6 +31,7 @@ import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.impl.ThreadContextDataInjector;
 import org.apache.logging.log4j.spi.ReadOnlyThreadContextMap;
+import org.apache.logging.log4j.util.ReadOnlyStringMap;
 import org.apache.logging.log4j.util.SortedArrayStringMap;
 import org.apache.logging.log4j.util.StringMap;
 
@@ -175,7 +176,7 @@ public final class OpenCensusTraceContextDataInjector implements ContextDataInje
   @Override
   public StringMap injectContextData(@Nullable List<Property> properties, StringMap reusable) {
     if (properties == null || properties.isEmpty()) {
-      return rawContextData();
+      return rawContextDataStringMap();
     }
     // Context data has precedence over configuration properties.
     ThreadContextDataInjector.copyProperties(properties, reusable);
@@ -183,9 +184,13 @@ public final class OpenCensusTraceContextDataInjector implements ContextDataInje
     return reusable;
   }
 
-  // This method avoids getting the current span when the feature is disabled, for efficiency.
   @Override
-  public StringMap rawContextData() {
+  public ReadOnlyStringMap rawContextData() {
+    return rawContextDataStringMap();
+  }
+
+  // This method avoids getting the current span when the feature is disabled, for efficiency.
+  private StringMap rawContextDataStringMap() {
     switch (spanSelection) {
       case NO_SPANS:
         return getContextData();
