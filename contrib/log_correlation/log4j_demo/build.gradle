@@ -10,9 +10,9 @@ apply plugin: 'java'
 dependencies {
     compile project(':opencensus-api'),
             project(':opencensus-exporter-trace-stackdriver'),
-            libraries.log4j
+            libraries.log4j2
 
-    runtime project(':opencensus-contrib-log-correlation-log4j'),
+    runtime project(':opencensus-contrib-log-correlation-log4j2'),
             project(':opencensus-impl-lite'),
             libraries.jackson_core,
             libraries.jackson_databind
@@ -26,4 +26,4 @@ mainClassName =
     'io.opencensus.contrib.logcorrelation.log4j.demo.OpenCensusLog4jLogCorrelationDemo'
 
 applicationDefaultJvmArgs =
-    ["-Dlog4j2.contextDataInjector=io.opencensus.contrib.logcorrelation.log4j.OpenCensusTraceContextDataInjector"]
+    ["-Dlog4j2.contextDataInjector=io.opencensus.contrib.logcorrelation.log4j2.OpenCensusTraceContextDataInjector"]
